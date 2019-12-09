@@ -1,4 +1,6 @@
-function [y] = AUXIVA(x, nfft, Maxiter)
+%% var_opt == 0 : Spherical laplacian distribution
+%% var_opt == 1 : Multivariate gaussian distribution with Time-varying Variance
+function [y] = AUXIVA(x, nfft, var_opt, Maxiter)
 nol = fix(3*nfft/4);
 nshift = nfft-nol;
 
@@ -29,7 +31,11 @@ for iter = 1 : Maxiter
     fprintf('\b\b\b\b%4d', iter);    
     for m  = 1 : M
         XpHt = conj( permute( Xp, [2,1,3] ) ); % Nframe x Nmic x Nfreq (matrix-wise Hermitian transpose)
-        R(:,:,m) = sqrt(sum(P(:,:,m),1));
+        if var_opt == 0
+            R(:,:,m) = sqrt(sum(P(:,:,m),1));
+        else
+            R(:,:,m) = sum(P(:,:,m),1)/K;
+        end
         Rp = permute(R,[3,2,1]); % Nmic x Nframe
         eleinvRp =repmat(1./Rp(m,:),M,1,1);
         for k = 1 : K

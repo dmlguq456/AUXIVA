@@ -5,10 +5,11 @@ clc; clear;
 
 %% parameter
 nfft = 2048;
+var_opt = 0;
 iteration = 50;
 
 %% Processing
-[y] = AUXIVA(x,nfft,iteration);
+[y] = AUXIVA(x,nfft,var_opt, iteration);
 
 %% Spectrogram
 figure('Position',[100 100 1000 300]);

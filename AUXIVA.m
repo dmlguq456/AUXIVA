@@ -6,12 +6,12 @@ nshift = nfft-nol;
 
 %% STFT
 X = STFT( x, nfft, nshift);
-[K, Nframe, M] = size(X);
+[K, N, M] = size(X);
 
 %% intialization
-R = zeros(1,Nframe,M);
+R = zeros(1,N,M);
 V = zeros(M, M, K); % weighted covariance matrix
-Y = zeros(K,Nframe,M);
+Y = zeros(K,N,M);
 W = zeros(M, M, K); % demixing matrix
 normCoef = zeros(1,K);
 
@@ -40,8 +40,7 @@ for iter = 1 : Maxiter
         end
         Rp = permute(R,[3,2,1]);
         for k = 1 : K
-           phi = 1./Rp(m,:);
-           V(:,:,k) = (Xp(:,:,k).*phi)*XpHt(:,:,k)/Nframe; 
+           V(:,:,k) = (Xp(:,:,k).*max(Rp(m,:),10^-6))*XpHt(:,:,k)/N; 
            invWD(:,:,k) = inv(W(:,:,k)*V(:,:,k));
            invWDE(:,k) = squeeze(invWD(:,m,k));
            normCoef(1,k) = invWDE(:,k)'*V(:,:,k)*invWDE(:,k);

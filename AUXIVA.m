@@ -40,7 +40,7 @@ for iter = 1 : Maxiter
         end
         Rp = permute(R,[3,2,1]);
         for k = 1 : K
-           V(:,:,k) = (Xp(:,:,k).*max(Rp(m,:),10^-6))*XpHt(:,:,k)/N; 
+           V(:,:,k) = (Xp(:,:,k)./max(Rp(m,:),10^-6))*XpHt(:,:,k)/N; 
            invWD(:,:,k) = inv(W(:,:,k)*V(:,:,k));
            invWDE(:,k) = squeeze(invWD(:,m,k));
            normCoef(1,k) = invWDE(:,k)'*V(:,:,k)*invWDE(:,k);
